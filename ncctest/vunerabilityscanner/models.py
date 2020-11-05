@@ -37,6 +37,7 @@ StatusOptions = (
 
 class Scan(models.Model):
     requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    name = models.CharField(max_length=20)
     started_at = models.DateTimeField()
     finished_At = models.DateTimeField()
     status = models.CharField(max_length=20, choices=StatusOptions)
@@ -44,7 +45,7 @@ class Scan(models.Model):
     assets_scanned = models.ManyToManyField(Assets)
 
     def __str__(self):
-        return "Scan requested by {} at {}".format(self.requested_by, self.started_at)
+        return "{} requested by {} at {}".format(self.name, self.requested_by, self.started_at)
 
 
 class SeverityCounts(models.Model):
