@@ -5,6 +5,7 @@ from rest_framework import serializers
 class SeverityCountsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SeverityCounts
+        # Leaves the scan field as we will only ever seralize the severity counts with scan object.
         fields = ['critical', 'high', 'medium', 'low', 'information']
 
 
@@ -23,6 +24,10 @@ class ScanSerializer(serializers.ModelSerializer):
     severity_counts = SeverityCountsSerializer()
 
     def create(self, validated_data):
+        """
+        Overridden to handle saving the severity counts instance in the Scan object.
+        """
+        # Create and save the scan object before dealing with the severity count.
         scan = Scan(
             requested_by=validated_data['requested_by'],
             started_at=validated_data['started_at'],
@@ -35,6 +40,7 @@ class ScanSerializer(serializers.ModelSerializer):
         scan.assets_scanned.set(validated_data['assets_scanned'])
         scan.save()
 
+        # Create the severity count for the scan object, using the new scan object as its one-to-one key.
         severity_counts_data = validated_data['severity_counts']
         severity_counts = SeverityCounts(
             critical=severity_counts_data['critical'],
