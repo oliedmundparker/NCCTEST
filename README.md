@@ -43,3 +43,12 @@ There are some other things I would have liked to have done but I feel fell outs
 1. Authentication. In a real world application most of these end points would be authenticated. Scans/Vulnerabilities would only be able to be read by the user who requested the scan & administrators. Additionally we'd also want to ensure only an admin could do put/delete requests.
 2. Verification. I would have liked to have added some verification on many elements in the code. E.G, an asset listed in a vulnerability should have to be in the scan the vulnerability is part of. And Start/End times should have some verification to ensure they make sense.
 
+## Update
+
+After I submitted the test I went back to check my code properly and discovered some problems that I should have spotted. You can see from the commit what they were, but to summarise:
+1. I assumed the references was always a URL but upon inspection it isn't (its multiple). I decided to change the field to a text field.
+2. Some char fields were clearly not long enough. I made these bigger.
+3. I had been adding scanners in the admin for my tests but disocvered there was no way to add these through the API. I have added this capbility through the /scanner endpoint.
+4. The scanner object was also looking for pk's rather than names. I resolved this, and made their name unique so no error could occur.
+5. Choices tuples where the wrong way round, reversed this error.
+6. Some field names were incorret from the sample jsons. Corrected.
