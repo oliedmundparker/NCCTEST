@@ -1,10 +1,7 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 
 from .seralizers import ScanSerializer, VulnerabilitySerializer, UserSerializer, AssetsSerializer
 from .models import Scan, Vulnerability, User, Assets
-
-# Create your views here.
 
 
 class ScanViewSet(viewsets.ModelViewSet):
