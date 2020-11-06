@@ -1,5 +1,3 @@
-from enum import Enum
-
 from django.db import models
 
 
@@ -28,6 +26,7 @@ class Assets(models.Model):
     def __str__(self):
         return self.name
 
+
 StatusOptions = (
     ("COMPLETE", "complete"),
     ("STARTED", "started"),
@@ -35,11 +34,14 @@ StatusOptions = (
 )
 
 
+UserOptions = [(user.id, user.pk) for user in User.objects.all()]
+
+
 class Scan(models.Model):
-    requested_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    requested_by = models.ForeignKey(User, choices=UserOptions, on_delete=models.CASCADE)
     name = models.CharField(max_length=20)
     started_at = models.DateTimeField()
-    finished_At = models.DateTimeField()
+    finished_at = models.DateTimeField()
     status = models.CharField(max_length=20, choices=StatusOptions)
     scanners = models.ManyToManyField(Scanner)
     assets_scanned = models.ManyToManyField(Assets)
@@ -54,7 +56,7 @@ class SeverityCounts(models.Model):
     medium = models.IntegerField()
     low = models.IntegerField()
     information = models.IntegerField()
-    scan = models.OneToOneField(Scan, on_delete=models.CASCADE)
+    scan = models.OneToOneField(Scan, on_delete=models.CASCADE, primary_key=True, related_name='severity_counts')
 
 
 SeverityChoices = (
@@ -73,7 +75,7 @@ class Vulnerability(models.Model):
     description = models.TextField()
     solution = models.TextField(blank=True)
     references = models.URLField(blank=True)
-    cvss_base_scare = models.FloatField()
+    cvss_base_score = models.FloatField()
     affected_assets = models.ManyToManyField(Assets)
 
     def __str__(self):
